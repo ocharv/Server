@@ -19,55 +19,52 @@ public class UserController {
         this.service = service;
     }
 
+    @PostMapping("/users")
+    public ResponseEntity<User> createUser(@RequestBody User newUser) {
+        try {
+            this.service.createUser(newUser);
+            return new ResponseEntity<>(newUser, HttpStatus.CREATED); // 201
+        }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.CONFLICT); // 409
+        }
+    }
+    @PostMapping("/login")
+    public ResponseEntity<User> authenticateUser(@RequestBody User user) {
+        try {
+            User authUser = this.service.authenticateUser(user);
+            if (authUser != null) {
+                return new ResponseEntity<>(authUser, HttpStatus.OK); // 200
+            }else{
+                return new ResponseEntity<>(null,HttpStatus.NOT_FOUND); //404
+            }
+        }catch(Exception e){
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND); //404
+        }
+    }
+    // We return all the users
     @GetMapping("/users")
     Iterable<User> all() {
         return service.getUsers();
     }
+    // We can find a user based on his/her Id
     @GetMapping("/users/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id){
-        try {
-            User user=service.getUserById(id);
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        }
-        catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        User user=this.service.getUserById(id);
+        if (user != null){
+            return new ResponseEntity<>(user, HttpStatus.OK); //200
+        }else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
         }
     }
     @PutMapping("/users/{id}")
+    //ResponseEntity<String>???
     public ResponseEntity<User> updateUser(@RequestBody User user){
         try {
             this.service.updateUser(user);
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            return new ResponseEntity<>(user, HttpStatus.NO_CONTENT); //204
         }
         catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
         }
     }
-   @PostMapping("/users")
-    public ResponseEntity<User> createUser(@RequestBody User newUser) {
-        try {
-            this.service.createUser(newUser);
-            return new ResponseEntity<>(newUser, HttpStatus.CREATED);
-        }catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
-    @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestBody User user) {
-        try {
-            if (this.service.validateUser(user) != null) {
-                return new ResponseEntity<>(user, HttpStatus.OK);
-            }else{
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        }catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-   /* @DeleteMapping("users/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
-        service.deleteUser(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }*/
 }

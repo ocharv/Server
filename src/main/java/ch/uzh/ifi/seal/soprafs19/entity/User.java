@@ -18,8 +18,8 @@ public class User implements Serializable {
 	@Column(updatable = false, nullable = false)
 	private Long id;
 	
-	@Column//(nullable = false)
-	private String name;
+	/*@Column(nullable = false)
+	private String name;*/
 	
 	@Column(nullable = false, unique = true) 
 	private String username;
@@ -39,12 +39,6 @@ public class User implements Serializable {
 	@Column(nullable = false)
 	private String creationDate;
 
-	/*@PrePersist
-	protected void prePersist() {
-		if (this.creationDate == null) creationDate = new Date();
-	}*/
-
-
 	//Setters and Getters
 	public Long getId() {
 		return id;
@@ -53,12 +47,12 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
-	public String getName() {
+	/*public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
+	}*/
 
 	public String getDateOfBirth() {
 		return dateOfBirth;

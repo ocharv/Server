@@ -32,8 +32,18 @@ public class UserService {
         return this.userRepository.findAll();
     }
     public User getUserById(Long id) {
-        User user = userRepository.findById(id).get();
-        return user;
+        return this.userRepository.getById(id);
+    }
+    public User createUser(User newUser) {
+        newUser.setToken(UUID.randomUUID().toString());
+        // creation date
+        SimpleDateFormat day = new SimpleDateFormat("dd/MM/yyyy");
+        String date = day.format(new Date());
+        newUser.setCreationDate(date);
+        newUser.setStatus(UserStatus.ONLINE);
+        userRepository.save(newUser);
+        log.debug("Created Information for User: {}", newUser);
+        return newUser;
     }
     public User updateUser(User user) {
         Long id = user.getId();
@@ -43,33 +53,14 @@ public class UserService {
         userRepository.save(updatedUser);
         return updatedUser;
     }
-
-    public User validateUser(User user){
-        String username= user.getUsername();
-        User validatedUser= this.userRepository.findByUsername(username);
-        if (validatedUser.getPassword().equals(user.getPassword())){
-            return user;
+    public User authenticateUser(User user){
+        String username = user.getUsername();
+        String password = user.getPassword();
+        User authUser= this.userRepository.findByUsername(username);
+        if (username.equals(authUser.getUsername()) && password.equals(authUser.getPassword())){
+            return authUser;
         }else{
             return null;
         }
     }
-   /* public void deleteUser(Long id) {
-        userRepository.delete(getUserById(id));
-    }*/
-    public User createUser(User newUser) {
-        newUser.setToken(UUID.randomUUID().toString());
-        // creation date
-        SimpleDateFormat today = new SimpleDateFormat("dd/MM/yyyy");
-        String date = today.format(new Date());
-        newUser.setCreationDate(date);
-
-        newUser.setStatus(UserStatus.ONLINE);
-        userRepository.save(newUser);
-        log.debug("Created Information for User: {}", newUser);
-        return newUser;
-    }
-    /*public User getUserByUsername(String username) {
-        User user = userRepository.findByUsername(username);
-        return user;
-    }*/
 }
