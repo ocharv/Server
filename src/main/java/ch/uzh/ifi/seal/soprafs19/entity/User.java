@@ -3,11 +3,9 @@ package ch.uzh.ifi.seal.soprafs19.entity;
 import ch.uzh.ifi.seal.soprafs19.constant.UserStatus;
 
 import java.io.Serializable;
+import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class User implements Serializable {
@@ -17,13 +15,17 @@ public class User implements Serializable {
 
 	@Id
 	@GeneratedValue
+	@Column(updatable = false, nullable = false)
 	private Long id;
 	
-	@Column(nullable = false) 
+	@Column//(nullable = false)
 	private String name;
 	
 	@Column(nullable = false, unique = true) 
 	private String username;
+
+	@Column(nullable = false)
+	private String password;
 	
 	@Column(nullable = false, unique = true) 
 	private String token;
@@ -31,10 +33,22 @@ public class User implements Serializable {
 	@Column(nullable = false)
 	private UserStatus status;
 
+	@Column
+	private String dateOfBirth;
+
+	@Column(nullable = false)
+	private String creationDate;
+
+	/*@PrePersist
+	protected void prePersist() {
+		if (this.creationDate == null) creationDate = new Date();
+	}*/
+
+
+	//Setters and Getters
 	public Long getId() {
 		return id;
 	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -42,23 +56,34 @@ public class User implements Serializable {
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDateOfBirth() {
+		return dateOfBirth;
+	}
+	public void setDateOfBirth(String dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
 
 	public String getUsername() {
 		return username;
 	}
-
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getToken() {
 		return token;
 	}
-
 	public void setToken(String token) {
 		this.token = token;
 	}
@@ -66,9 +91,13 @@ public class User implements Serializable {
 	public UserStatus getStatus() {
 		return status;
 	}
-
 	public void setStatus(UserStatus status) {
 		this.status = status;
+	}
+
+	public String getCreationDate() {return creationDate;}
+	public void setCreationDate(String creationDate) {
+		this.creationDate = creationDate;
 	}
 
 	@Override
