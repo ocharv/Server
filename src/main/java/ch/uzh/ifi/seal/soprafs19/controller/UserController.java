@@ -57,14 +57,13 @@ public class UserController {
         }
     }
     @PutMapping("/users/{id}")
-    //ResponseEntity<String>???
-    public ResponseEntity<User> updateUser(@RequestBody User user){
+    public ResponseEntity<String> updateUser(@RequestBody User user){
         try {
             this.service.updateUser(user);
-            return new ResponseEntity<>(user, HttpStatus.NO_CONTENT); //204
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); //204
         }
         catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
+            return new ResponseEntity<>("There is no such user",HttpStatus.NOT_FOUND); //404
         }
     }
 }

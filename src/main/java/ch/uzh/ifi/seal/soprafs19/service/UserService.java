@@ -36,7 +36,6 @@ public class UserService {
     }
     public User createUser(User newUser) {
         newUser.setToken(UUID.randomUUID().toString());
-        // creation date
         SimpleDateFormat day = new SimpleDateFormat("dd/MM/yyyy");
         String date = day.format(new Date());
         newUser.setCreationDate(date);
@@ -50,6 +49,7 @@ public class UserService {
         User updatedUser = this.userRepository.getById(id);
         updatedUser.setDateOfBirth(user.getDateOfBirth());
         updatedUser.setUsername(user.getUsername());
+        updatedUser.setName(user.getName());
         userRepository.save(updatedUser);
         return updatedUser;
     }
